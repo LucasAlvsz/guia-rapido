@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia Interativo de Psicanálise</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: Uma SPA temática com botões de navegação no topo para cada figura psicanalítica principal (Freud, Klein/A.Freud, Winnicott, Lacan). Esta estrutura divide o assunto complexo em seções focadas e gerenciáveis para um melhor aprendizado. A interação inclui a alternância entre essas seções e um gráfico de barras comparativo para a visão de Klein vs. A. Freud sobre o Superego. Esta estrutura foi escolhida em vez de uma rolagem linear para promover a exploração ativa e a comparação. -->
+    <!-- Visualization & Content Choices: Informação do Relatório: Klein vs. A. Freud sobre o Superego. -> Objetivo: Comparar. -> Visualização: Gráfico de Barras. -> Interação: Visualização estática com dicas de ferramenta. -> Justificativa: Fornece uma representação visual imediata do contraste teórico, que é mais impactante do que apenas o texto. -> Biblioteca: Chart.js (Canvas). Toda a informação textual é organizada em seções dedicadas acionadas pela navegação principal para clareza e foco. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #38332E;
+        }
+        .nav-button {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-button.active {
+            border-bottom-color: #A58D76;
+            color: #A58D76;
+            font-weight: 600;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .card {
+            background-color: #FFFFFF;
+            border: 1px solid #F0EBE5;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 py-8 md:py-12">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#5C4B3E]">Guia Interativo de Psicanálise</h1>
+            <p class="mt-2 text-lg text-gray-600">Explore os conceitos fundamentais dos principais teóricos.</p>
+        </header>
+
+        <nav class="flex justify-center border-b border-gray-200 mb-12">
+            <button data-target="freud" class="nav-button py-4 px-6 text-lg text-gray-500 hover:text-[#A58D76] active">Freud</button>
+            <button data-target="klein-anna" class="nav-button py-4 px-6 text-lg text-gray-500 hover:text-[#A58D76]">Klein vs. A. Freud</button>
+            <button data-target="winnicott" class="nav-button py-4 px-6 text-lg text-gray-500 hover:text-[#A58D76]">Winnicott</button>
+            <button data-target="lacan" class="nav-button py-4 px-6 text-lg text-gray-500 hover:text-[#A58D76]">Lacan</button>
+        </nav>
+
+        <main id="main-content">
+            <section id="freud" class="content-section active">
+                <!-- Content will be injected by JS -->
+            </section>
+            <section id="klein-anna" class="content-section">
+                <!-- Content will be injected by JS -->
+            </section>
+            <section id="winnicott" class="content-section">
+                 <!-- Content will be injected by JS -->
+            </section>
+            <section id="lacan" class="content-section">
+                 <!-- Content will be injected by JS -->
+            </section>
+        </main>
+
+    </div>
+
+    <script>
+        const studyData = {
+            freud: {
+                title: "Técnica Psicanalítica Freudiana",
+                intro: "Esta seção detalha as regras técnicas fundamentais estabelecidas por Sigmund Freud, que formam a base da prática clínica psicanalítica. Explore os conceitos que definem a postura do analista e a dinâmica da análise, como a atenção flutuante, a neutralidade e o manejo da transferência.",
+                concepts: [
+                    { title: "Técnica Analítica", description: "Um conjunto de recomendações para o analista, incluindo a Atenção Flutuante (a contrapartida da associação livre do paciente), a Neutralidade (agir como um espelho) e a Abstinência (não satisfazer as demandas do paciente), que visam criar as condições ideais para o trabalho analítico." },
+                    { title: "Transferência", description: "Fenômeno central em que sentimentos e desejos do passado do paciente são deslocados para a figura do analista. É o motor do tratamento, mas também sua maior resistência, e seu manejo adequado (sem correspondê-la nem reprimi-la) é crucial." }
+                ]
+            },
+            klein_anna: {
+                title: "Psicanálise Infantil e Teorias do Desenvolvimento",
+                intro: "Aqui, exploramos o debate central na história da psicanálise infantil entre Anna Freud e Melanie Klein. A seção contrasta suas abordagens sobre a técnica, o desenvolvimento do superego e a natureza do conflito psíquico na criança, incluindo um gráfico que visualiza a diferença fundamental em suas concepções do superego.",
+                comparison: [
+                    { topic: "Análise de Crianças", anna: "A técnica deve ser diferente da dos adultos. A relação com o terapeuta é de natureza pedagógica e reeducativa.", klein: "A análise de crianças é idêntica à de adultos. A técnica do jogo é usada para acessar as fantasias inconscientes, que devem ser interpretadas em profundidade." },
+                    { topic: "Transferência", anna: "Crianças não desenvolvem uma neurose de transferência completa, pois seus vínculos principais ainda são com os pais reais.", klein: "Crianças desenvolvem uma neurose de transferência completa e análoga à dos adultos, que deve ser analisada sistematicamente (tanto a positiva quanto a negativa)." },
+                    { topic: "Superego", anna: "O superego da criança é fraco e precisa ser reforçado pelo terapeuta.", klein: "A criança possui um superego precoce, formado no primeiro ano de vida, que é excessivamente sádico e cruel. A análise visa reduzir sua severidade." },
+                    { topic: "Conflito Psíquico", anna: "Baseado na segunda tópica de Freud, o conflito ocorre entre as instâncias (ego, id, superego) e a realidade.", klein: "O conflito central é entre os sentimentos de amor e ódio em relação aos objetos (internos e externos)." }
+                ],
+                 positions: {
+                    title: "As Posições de Klein",
+                    description: "Klein substituiu a ideia de 'fases' pelo conceito de 'posições', estruturas mentais que persistem ao longo da vida.",
+                    items: [
+                        { name: "Posição Esquizo-Paranoide", details: "Marcada pela angústia persecutória (medo de aniquilação) e pela relação com objetos parciais (bom/mau)." },
+                        { name: "Posição Depressiva", details: "Caracterizada pela angústia depressiva (culpa), a percepção do objeto total e o desejo de reparação." }
+                    ]
+                }
+            },
+            winnicott: {
+                title: "Teoria das Relações de Objeto de Winnicott",
+                intro: "Nesta seção, aprofundamos nas contribuições de D.W. Winnicott, que deu ênfase à importância crucial do ambiente e da figura materna no desenvolvimento psíquico. Conheça conceitos inovadores como 'mãe suficientemente boa', 'holding' e o 'espaço transicional'.",
+                concepts: [
+                    { title: "Ambiente e o Self", description: "Winnicott destacou a importância do ambiente real (a mãe). A 'Mãe Suficientemente Boa' é aquela que, através do holding (sustentação), permite o desenvolvimento do 'self verdadeiro'. Falhas nesse processo levam à criação de um 'self falso' como defesa." },
+                    { title: "Espaço Transicional", description: "Uma área intermediária de experiência, entre a realidade interna (fantasia) e a externa. O 'Objeto Transicional' é a primeira possessão do bebê que habita esse espaço, ajudando-o a lidar com a separação e inaugurando a capacidade de brincar e criar." }
+                ]
+            },
+            lacan: {
+                title: "Conceitos Estruturais de Jacques Lacan",
+                intro: "Explore a abordagem estruturalista de Jacques Lacan, que reformulou a teoria psicanalítica a partir da linguística. Esta seção foca no seu conceito central de 'Grande Outro' como a ordem simbólica que preexiste e determina o sujeito e seu inconsciente.",
+                concepts: [
+                    { title: "O Grande Outro (A)", description: "Não é uma pessoa, mas sim a ordem simbólica: o tesouro dos significantes, o campo da linguagem, da cultura e da Lei que preexiste ao sujeito e determina seu inconsciente. O inconsciente é 'o discurso do Outro'." }
+                ]
+            }
+        };
+
+        function renderFreud() {
+            const data = studyData.freud;
+            const section = document.getElementById('freud');
+            let content = `<h2 class="text-3xl font-bold text-center mb-4 text-[#5C4B3E]">${data.title}</h2>`;
+            content += `<p class="text-lg text-center text-gray-600 max-w-3xl mx-auto mb-10">${data.intro}</p>`;
+            content += '<div class="grid md:grid-cols-2 gap-8">';
+            data.concepts.forEach(concept => {
+                content += `
+                    <div class="card rounded-lg p-6">
+                        <h3 class="text-2xl font-semibold mb-3 text-[#A58D76]">${concept.title}</h3>
+                        <p class="text-gray-700 leading-relaxed">${concept.description}</p>
+                    </div>
+                `;
+            });
+            content += '</div>';
+            section.innerHTML = content;
+        }
+
+        function renderKleinAnna() {
+            const data = studyData.klein_anna;
+            const section = document.getElementById('klein-anna');
+            let content = `<h2 class="text-3xl font-bold text-center mb-4 text-[#5C4B3E]">${data.title}</h2>`;
+             content += `<p class="text-lg text-center text-gray-600 max-w-3xl mx-auto mb-12">${data.intro}</p>`;
+            
+            content += `<div class="bg-white rounded-lg p-6 md:p-8 shadow-md border border-gray-200 mb-12">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center items-center">
+                                <div class="font-bold text-xl text-[#A58D76]">Anna Freud</div>
+                                <div class="text-lg font-semibold text-gray-500">Tópico de Comparação</div>
+                                <div class="font-bold text-xl text-[#A58D76]">Melanie Klein</div>
+                            </div>
+                            <hr class="my-4">`;
+
+            data.comparison.forEach(item => {
+                content += `
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center py-4 border-b last:border-b-0">
+                        <div class="text-gray-700 text-center md:text-left">${item.anna}</div>
+                        <div class="font-semibold text-gray-800 text-center order-first md:order-none">${item.topic}</div>
+                        <div class="text-gray-700 text-center md:text-left">${item.klein}</div>
+                    </div>
+                `;
+            });
+            content += `</div>`;
+
+            content += `
+                <div class="card rounded-lg p-6 md:p-8 mb-12">
+                    <h3 class="text-2xl font-semibold mb-4 text-center text-[#A58D76]">${data.positions.title}</h3>
+                    <p class="text-center text-gray-600 mb-6">${data.positions.description}</p>
+                    <div class="flex items-center justify-center space-x-4 md:space-x-8">
+                         <div class="text-center p-4 bg-gray-50 rounded-lg flex-1">
+                            <h4 class="font-bold text-lg">${data.positions.items[0].name}</h4>
+                            <p class="text-sm text-gray-600">${data.positions.items[0].details}</p>
+                         </div>
+                         <div class="text-3xl text-[#A58D76] font-light">→</div>
+                         <div class="text-center p-4 bg-gray-50 rounded-lg flex-1">
+                            <h4 class="font-bold text-lg">${data.positions.items[1].name}</h4>
+                            <p class="text-sm text-gray-600">${data.positions.items[1].details}</p>
+                         </div>
+                    </div>
+                </div>`;
+            
+            content += `<div class="card rounded-lg p-6 md:p-8">
+                <h3 class="text-2xl font-semibold mb-4 text-center text-[#A58D76]">Visualização do Superego: Anna Freud vs. Melanie Klein</h3>
+                <div class="chart-container">
+                    <canvas id="superegoChart"></canvas>
+                </div>
+            </div>`;
+            section.innerHTML = content;
+        }
+        
+        function renderWinnicott() {
+            const data = studyData.winnicott;
+            const section = document.getElementById('winnicott');
+            let content = `<h2 class="text-3xl font-bold text-center mb-4 text-[#5C4B3E]">${data.title}</h2>`;
+            content += `<p class="text-lg text-center text-gray-600 max-w-3xl mx-auto mb-10">${data.intro}</p>`;
+            content += '<div class="grid md:grid-cols-2 gap-8">';
+            data.concepts.forEach(concept => {
+                content += `
+                    <div class="card rounded-lg p-6">
+                        <h3 class="text-2xl font-semibold mb-3 text-[#A58D76]">${concept.title}</h3>
+                        <p class="text-gray-700 leading-relaxed">${concept.description}</p>
+                    </div>
+                `;
+            });
+            content += '</div>';
+            section.innerHTML = content;
+        }
+
+        function renderLacan() {
+            const data = studyData.lacan;
+            const section = document.getElementById('lacan');
+            let content = `<h2 class="text-3xl font-bold text-center mb-4 text-[#5C4B3E]">${data.title}</h2>`;
+            content += `<p class="text-lg text-center text-gray-600 max-w-3xl mx-auto mb-10">${data.intro}</p>`;
+            content += '<div class="max-w-2xl mx-auto">';
+            data.concepts.forEach(concept => {
+                content += `
+                    <div class="card rounded-lg p-6">
+                        <h3 class="text-2xl font-semibold mb-3 text-[#A58D76]">${concept.title}</h3>
+                        <p class="text-gray-700 leading-relaxed">${concept.description}</p>
+                    </div>
+                `;
+            });
+            content += '</div>';
+            section.innerHTML = content;
+        }
+
+
+        let superegoChartInstance = null;
+        function createSuperegoChart() {
+            const ctx = document.getElementById('superegoChart').getContext('2d');
+            if(superegoChartInstance) {
+                superegoChartInstance.destroy();
+            }
+            superegoChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Anna Freud', 'Melanie Klein'],
+                    datasets: [{
+                        label: 'Severidade Conceitual do Superego',
+                        data: [2, 8],
+                        backgroundColor: [
+                            'rgba(165, 141, 118, 0.6)',
+                            'rgba(92, 75, 62, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(165, 141, 118, 1)',
+                            'rgba(92, 75, 62, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 10,
+                             ticks: {
+                                callback: function(value) {
+                                    if (value === 2) return 'Fraco';
+                                    if (value === 8) return 'Sádico/Severo';
+                                    return '';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                             callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y === 2) {
+                                        label += 'Fraco e a ser reforçado';
+                                    } else {
+                                        label += 'Precoce e sádico';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        const navButtons = document.querySelectorAll('.nav-button');
+        const contentSections = document.querySelectorAll('.content-section');
+
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const target = button.dataset.target;
+
+                navButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                contentSections.forEach(section => {
+                    if (section.id === target) {
+                        section.classList.add('active');
+                    } else {
+                        section.classList.remove('active');
+                    }
+                });
+                
+                if (target === 'klein-anna') {
+                    setTimeout(createSuperegoChart, 0);
+                }
+            });
+        });
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            renderFreud();
+            renderKleinAnna();
+            renderWinnicott();
+            renderLacan();
+        });
+    </script>
+</body>
+</html>
