@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infográfico Interativo: Revisão de Psicopatologia II</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Energetic & Playful -->
+    <!-- Application Structure Plan: A single-page, multi-section layout was designed to present the dense textual information from the review document in a more digestible format. The structure includes a sticky navigation bar for easy access to thematic sections (e.g., Ansiedade, Humor). This non-linear navigation allows students to focus on specific topics without scrolling through the entire document. Within each section, content is organized into cards using a grid system, which facilitates comparison between related disorders. This structure was chosen for its usability in a study context, prioritizing quick access and clear segmentation of information over the original Q&A format. -->
+    <!-- Visualization & Content Choices: 
+    - Report Info: Duration difference between Psychotic Disorders. Goal: Compare. Viz/Presentation Method: Side-by-side comparison cards using HTML/CSS grid. Justification: Visually contrasts the key differentiating factor (time) directly. Method: HTML/Tailwind.
+    - Report Info: Types of Schizophrenia. Goal: Organize. Viz/Presentation Method: A responsive grid of info cards. Justification: Allows for a quick overview and individual focus on each type. Method: HTML/Tailwind.
+    - Report Info: Treatment steps for Addictive Disorders. Goal: Organize/Inform. Viz/Presentation Method: A numbered process flow diagram. Justification: Presents the treatment process sequentially, which is easier to memorize than a simple list. Method: HTML/Tailwind with flexbox for connectors.
+    - Report Info: General definitions and lists. Goal: Inform. Viz/Presentation Method: Styled text cards with clear typography. Justification: Best for presenting textual definitions clearly. Method: HTML/Tailwind.
+    - NO SVG/Mermaid confirmed for all visualizations. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .nav-link.active {
+            background-color: #FFC700;
+            color: #0D0D0D;
+            font-weight: 600;
+        }
+        .process-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .process-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #0D0D0D;
+            background-color: #FFC700;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        .process-connector {
+            width: 2px;
+            height: 30px;
+            background-color: #cbd5e1;
+            margin-left: 19px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+    <div id="top" class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-[#0D0D0D] tracking-tight">Revisão de Psicopatologia II</h1>
+            <p class="mt-3 text-lg text-slate-600 max-w-2xl mx-auto">Um guia visual e interativo sobre os principais transtornos mentais para a sua avaliação.</p>
+        </header>
+
+        <nav id="navbar" class="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-md rounded-full mb-12 py-2 px-4">
+            <ul class="flex flex-wrap justify-center items-center gap-2 sm:gap-4 text-sm sm:text-base">
+                <li><a href="#entrevista" class="nav-link px-3 py-2 rounded-full transition-colors duration-300 hover:bg-yellow-200">Entrevista</a></li>
+                <li><a href="#ansiedade" class="nav-link px-3 py-2 rounded-full transition-colors duration-300 hover:bg-yellow-200">Ansiedade</a></li>
+                <li><a href="#humor" class="nav-link px-3 py-2 rounded-full transition-colors duration-300 hover:bg-yellow-200">Humor</a></li>
+                <li><a href="#psicoticos" class="nav-link px-3 py-2 rounded-full transition-colors duration-300 hover:bg-yellow-200">Psicóticos</a></li>
+                <li><a href="#alimentares" class="nav-link px-3 py-2 rounded-full transition-colors duration-300 hover:bg-yellow-200">Alimentares</a></li>
+                <li><a href="#aditivos" class="nav-link px-3 py-2 rounded-full transition-colors duration-300 hover:bg-yellow-200">Aditivos</a></li>
+            </ul>
+        </nav>
+
+        <main class="space-y-16">
+            <section id="entrevista" class="space-y-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold text-[#2D728F]">Avaliação e Entrevista Psicológica</h2>
+                    <p class="mt-2 text-md text-slate-600 max-w-xl mx-auto">A base da avaliação em saúde mental, focada em estabelecer confiança e coletar informações cruciais para o diagnóstico.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg border border-slate-200">
+                    <h3 class="text-xl font-semibold text-[#FF4800] mb-4">As 3 Regras de Ouro da Entrevista</h3>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="p-4 bg-slate-50 rounded-md">
+                            <h4 class="font-bold">1. Pacientes Organizados</h4>
+                            <p class="text-slate-600 mt-1">Conduza uma entrevista aberta. Permita a expressão espontânea e fale pouco.</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-md">
+                            <h4 class="font-bold">2. Pacientes Desorganizados</h4>
+                            <p class="text-slate-600 mt-1">Use uma abordagem estruturada. Fale mais e faça perguntas simples e diretas.</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-md">
+                            <h4 class="font-bold">3. Pacientes Tímidos/Ansiosos</h4>
+                            <p class="text-slate-600 mt-1">Comece com perguntas neutras e avance gradualmente para temas mais sensíveis.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="ansiedade" class="space-y-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold text-[#2D728F]">Transtornos de Ansiedade</h2>
+                    <p class="mt-2 text-md text-slate-600 max-w-xl mx-auto">Caracterizados por medo, preocupação e angústia excessivos que interferem na vida diária.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow-lg"><h3 class="font-semibold text-lg mb-2 text-[#FF4800]">Ansiedade de Separação</h3><p>Medo excessivo da separação de figuras de apego.</p></div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg"><h3 class="font-semibold text-lg mb-2 text-[#FF4800]">Mutismo Seletivo</h3><p>Incapacidade de falar em situações sociais específicas.</p></div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg"><h3 class="font-semibold text-lg mb-2 text-[#FF4800]">Fobia Específica</h3><p>Medo acentuado de um objeto ou situação particular.</p></div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg"><h3 class="font-semibold text-lg mb-2 text-[#FF4800]">Fobia Social</h3><p>Medo de avaliação negativa em situações sociais.</p></div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg"><h3 class="font-semibold text-lg mb-2 text-[#FF4800]">Transtorno de Pânico</h3><p>Ataques súbitos de medo intenso e preocupação com novos ataques.</p></div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg"><h3 class="font-semibold text-lg mb-2 text-[#FF4800]">Agorafobia</h3><p>Medo de situações onde o escape pode ser difícil (multidões, espaços abertos).</p></div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg md:col-span-2 lg:col-span-3"><h3 class="font-semibold text-lg mb-2 text-[#FF4800]">Ansiedade Generalizada (TAG)</h3><p>Preocupação excessiva e crônica sobre diversos temas por pelo menos 6 meses.</p></div>
+                </div>
+            </section>
+
+            <section id="humor" class="space-y-8">
+                <div class="text-center">
+                     <h2 class="text-3xl font-bold text-[#2D728F]">Transtornos de Humor</h2>
+                    <p class="mt-2 text-md text-slate-600 max-w-xl mx-auto">Definidos por alterações significativas no humor, variando de depressão profunda a euforia (mania).</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                     <div class="bg-white p-6 rounded-lg shadow-lg"><h3 class="font-semibold text-lg mb-2 text-[#FF4800]">Bipolar I</h3><p>Presença de pelo menos um episódio maníaco completo.</p></div>
+                     <div class="bg-white p-6 rounded-lg shadow-lg"><h3 class="font-semibold text-lg mb-2 text-[#FF4800]">Bipolar II</h3><p>Alternância entre episódios hipomaníacos e depressivos maiores, sem mania completa.</p></div>
+                     <div class="bg-white p-6 rounded-lg shadow-lg"><h3 class="font-semibold text-lg mb-2 text-[#FF4800]">Ciclotímico</h3><p>Flutuações de humor crônicas (2+ anos) com sintomas hipomaníacos e depressivos que não fecham critérios para episódios completos.</p></div>
+                     <div class="bg-white p-6 rounded-lg shadow-lg"><h3 class="font-semibold text-lg mb-2 text-[#FF4800]">Depressivo Maior</h3><p>Um ou mais episódios de humor deprimido ou perda de interesse/prazer com duração de pelo menos 2 semanas.</p></div>
+                     <div class="bg-white p-6 rounded-lg shadow-lg md:col-span-2"><h3 class="font-semibold text-lg mb-2 text-[#FF4800]">Depressivo Persistente (Distimia)</h3><p>Humor cronicamente deprimido na maior parte dos dias por pelo menos 2 anos.</p></div>
+                </div>
+            </section>
+
+            <section id="psicoticos" class="space-y-8">
+                <div class="text-center">
+                     <h2 class="text-3xl font-bold text-[#2D728F]">Espectro da Esquizofrenia e Transtornos Psicóticos</h2>
+                    <p class="mt-2 text-md text-slate-600 max-w-xl mx-auto">Transtornos graves caracterizados por uma perda de contato com a realidade (psicose).</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold text-[#FF4800] mb-4">Comparativo de Duração</h3>
+                    <div class="grid md:grid-cols-2 gap-6 text-center">
+                        <div class="p-4 bg-yellow-100 rounded-md border-l-4 border-yellow-400">
+                            <h4 class="font-bold">Transtorno Psicótico Breve</h4>
+                            <p class="text-2xl font-bold text-[#FF4800] mt-2">1 dia a 1 mês</p>
+                        </div>
+                        <div class="p-4 bg-blue-100 rounded-md border-l-4 border-blue-400">
+                            <h4 class="font-bold">Transtorno Esquizofreniforme</h4>
+                             <p class="text-2xl font-bold text-[#2D728F] mt-2">1 mês a 6 meses</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold text-[#FF4800] mb-4">Tipos de Esquizofrenia</h3>
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <p><strong class="text-slate-900">Simples:</strong> Lenta e progressiva.</p>
+                        <p><strong class="text-slate-900">Hebefrênica:</strong> Pensamento desorganizado, comportamento infantilizado.</p>
+                        <p><strong class="text-slate-900">Paranóide:</strong> Delírios e alucinações proeminentes.</p>
+                        <p><strong class="text-slate-900">Catatônica:</strong> Alterações motoras (agitação ou imobilidade).</p>
+                        <p><strong class="text-slate-900">Residual:</strong> Sintomas negativos persistem após crise.</p>
+                        <p><strong class="text-slate-900">Indiferenciada:</strong> Sintomas mistos.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="alimentares" class="space-y-8">
+                <div class="text-center">
+                     <h2 class="text-3xl font-bold text-[#2D728F]">Transtornos Alimentares</h2>
+                    <p class="mt-2 text-md text-slate-600 max-w-xl mx-auto">Perturbações graves no comportamento alimentar e preocupações excessivas com peso e forma corporal.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow-lg"><h3 class="font-semibold text-lg mb-2 text-[#FF4800]">Anorexia Nervosa</h3><p>Restrição calórica severa, medo intenso de engordar e peso corporal baixo.</p></div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg"><h3 class="font-semibold text-lg mb-2 text-[#FF4800]">Bulimia Nervosa</h3><p>Ciclos de compulsão alimentar seguidos de comportamentos compensatórios (purgação).</p></div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg"><h3 class="font-semibold text-lg mb-2 text-[#FF4800]">Compulsão Alimentar</h3><p>Episódios de compulsão alimentar sem purgação, causando sofrimento.</p></div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg"><h3 class="font-semibold text-lg mb-2 text-[#FF4800]">Pica</h3><p>Ingestão persistente de substâncias não nutritivas (terra, papel).</p></div>
+                </div>
+            </section>
+            
+            <section id="aditivos" class="space-y-8">
+                <div class="text-center">
+                     <h2 class="text-3xl font-bold text-[#2D728F]">Transtornos Relacionados a Substâncias e Aditivos</h2>
+                    <p class="mt-2 text-md text-slate-600 max-w-xl mx-auto">Padrões de uso de substâncias e comportamentos aditivos que levam a prejuízo significativo.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="text-xl font-semibold text-[#FF4800] mb-4">Continuum do Uso de Substâncias</h3>
+                        <ul class="space-y-2">
+                            <li><strong class="text-slate-900">Uso:</strong> Consumo casual.</li>
+                            <li><strong class="text-slate-900">Abuso:</strong> Uso nocivo e recorrente.</li>
+                            <li><strong class="text-slate-900">Dependência:</strong> Compulsão e necessidade constante.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                         <h3 class="text-xl font-semibold text-[#FF4800] mb-4">Tratamento para Transtornos Aditivos</h3>
+                        <div>
+                            <div class="process-step">
+                                <div class="process-number">1</div>
+                                <p>Desintoxicação</p>
+                            </div>
+                            <div class="process-connector"></div>
+                             <div class="process-step">
+                                <div class="process-number">2</div>
+                                <p>Terapia (Comportamental/Farmacológica)</p>
+                            </div>
+                            <div class="process-connector"></div>
+                             <div class="process-step">
+                                <div class="process-number">3</div>
+                                <p>Apoio Social (Grupos, Aconselhamento)</p>
+                            </div>
+                             <div class="process-connector"></div>
+                              <div class="process-step">
+                                <div class="process-number">4</div>
+                                <p>Tratamento Residencial (Casos Graves)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.4
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+            
+            const navbar = document.getElementById('navbar');
+            const initialNavTop = navbar.offsetTop;
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > initialNavTop) {
+                    navbar.classList.add('fixed', 'top-4', 'left-1/2', '-translate-x-1/2', 'w-11/12', 'max-w-2xl');
+                } else {
+                     navbar.classList.remove('fixed', 'top-4', 'left-1/2', '-translate-x-1/2', 'w-11/12', 'max-w-2xl');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
