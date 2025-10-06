@@ -3,29 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guia Interativo de Psicanálise</title>
+    <title>Guia de Estudo Interativo de Psicopatologia II</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Warm Neutrals -->
-    <!-- Application Structure Plan: Uma SPA temática com botões de navegação no topo para cada figura psicanalítica principal (Freud, Klein/A.Freud, Winnicott, Lacan). Esta estrutura divide o assunto complexo em seções focadas e gerenciáveis para um melhor aprendizado. A interação inclui a alternância entre essas seções e um gráfico de barras comparativo para a visão de Klein vs. A. Freud sobre o Superego. Esta estrutura foi escolhida em vez de uma rolagem linear para promover a exploração ativa e a comparação. -->
-    <!-- Visualization & Content Choices: Informação do Relatório: Klein vs. A. Freud sobre o Superego. -> Objetivo: Comparar. -> Visualização: Gráfico de Barras. -> Interação: Visualização estática com dicas de ferramenta. -> Justificativa: Fornece uma representação visual imediata do contraste teórico, que é mais impactante do que apenas o texto. -> Biblioteca: Chart.js (Canvas). Toda a informação textual é organizada em seções dedicadas acionadas pela navegação principal para clareza e foco. -->
+    <!-- Chosen Palette: Calm Study -->
+    <!-- Application Structure Plan: A thematic, single-page application structure was chosen to logically group related disorders, moving away from the linear Q&A format of the source document. The main navigation allows users to select a major category of disorders (e.g., Ansiedade, Humor). The content for the selected category is then displayed in an interactive accordion list. Users can click on any specific disorder to expand a card and view its detailed information. This structure enhances usability by allowing for focused, comparative study (e.g., comparing all mood disorders side-by-side) and prevents information overload by letting the user control which details are visible at any time, which is more effective for exam preparation. -->
+    <!-- Visualization & Content Choices: Report Info -> Textual definitions and characteristics of psychiatric disorders. Goal -> Organize and Inform. Viz/Presentation Method -> Interactive accordion cards built with structured HTML and Tailwind CSS. Interaction -> Users click a disorder's title to expand/collapse its detailed description. Justification -> As the source material is purely textual, traditional charts are not applicable. The accordion model is the most effective interactive method to organize dense text, allowing users to easily navigate, explore, and compare related concepts without being overwhelmed by a single, long wall of text. Library/Method -> Vanilla JavaScript for all interactions, Tailwind CSS for styling. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #FDFBF8;
-            color: #38332E;
+            background-color: #f8f7f4;
+            color: #44403c;
         }
         .nav-button {
-            transition: all 0.3s ease;
-            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease-in-out;
         }
         .nav-button.active {
-            border-bottom-color: #A58D76;
-            color: #A58D76;
+            background-color: #0d9488;
+            color: #f0fdfa;
             font-weight: 600;
         }
         .content-section {
@@ -34,300 +32,434 @@
         .content-section.active {
             display: block;
         }
-        .card {
-            background-color: #FFFFFF;
-            border: 1px solid #F0EBE5;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+            padding: 0 1.5rem;
         }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 350px;
-            max-height: 400px;
+        .accordion-button.open + .accordion-content {
+            max-height: 1000px; /* Adjust as needed */
+            padding: 1.5rem 1.5rem;
+        }
+        .accordion-button .icon {
+            transition: transform 0.3s ease-in-out;
+        }
+        .accordion-button.open .icon {
+            transform: rotate(45deg);
         }
     </style>
 </head>
 <body class="antialiased">
 
-    <div class="container mx-auto px-4 py-8 md:py-12">
-        <header class="text-center mb-10">
-            <h1 class="text-4xl md:text-5xl font-bold text-[#5C4B3E]">Guia Interativo de Psicanálise</h1>
-            <p class="mt-2 text-lg text-gray-600">Explore os conceitos fundamentais dos principais teóricos.</p>
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-5xl">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-teal-800">Guia Interativo de Psicopatologia II</h1>
+            <p class="mt-2 text-lg text-stone-600">Um resumo dos principais transtornos para sua avaliação.</p>
         </header>
 
-        <nav class="flex justify-center border-b border-gray-200 mb-12">
-            <button data-target="freud" class="nav-button py-4 px-6 text-lg text-gray-500 hover:text-[#A58D76] active">Freud</button>
-            <button data-target="klein-anna" class="nav-button py-4 px-6 text-lg text-gray-500 hover:text-[#A58D76]">Klein vs. A. Freud</button>
-            <button data-target="winnicott" class="nav-button py-4 px-6 text-lg text-gray-500 hover:text-[#A58D76]">Winnicott</button>
-            <button data-target="lacan" class="nav-button py-4 px-6 text-lg text-gray-500 hover:text-[#A58D76]">Lacan</button>
+        <nav class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8">
+            <button class="nav-button active px-4 py-2 rounded-full bg-white text-stone-700 hover:bg-teal-100 shadow-sm text-sm sm:text-base" data-target="avaliacao">Avaliação & Entrevista</button>
+            <button class="nav-button px-4 py-2 rounded-full bg-white text-stone-700 hover:bg-teal-100 shadow-sm text-sm sm:text-base" data-target="ansiedade">Transtornos de Ansiedade</button>
+            <button class="nav-button px-4 py-2 rounded-full bg-white text-stone-700 hover:bg-teal-100 shadow-sm text-sm sm:text-base" data-target="humor">Transtornos de Humor</button>
+            <button class="nav-button px-4 py-2 rounded-full bg-white text-stone-700 hover:bg-teal-100 shadow-sm text-sm sm:text-base" data-target="psicoticos">Transtornos Psicóticos</button>
+            <button class="nav-button px-4 py-2 rounded-full bg-white text-stone-700 hover:bg-teal-100 shadow-sm text-sm sm:text-base" data-target="alimentares">Transtornos Alimentares</button>
+            <button class="nav-button px-4 py-2 rounded-full bg-white text-stone-700 hover:bg-teal-100 shadow-sm text-sm sm:text-base" data-target="aditivos">Transtornos Aditivos</button>
         </nav>
 
         <main id="main-content">
-            <section id="freud" class="content-section active">
-                <!-- Content will be injected by JS -->
+            <!-- Seção de Avaliação e Entrevista -->
+            <section id="avaliacao" class="content-section active space-y-4">
+                <p class="text-center text-stone-600 bg-stone-100 p-4 rounded-lg">Esta seção aborda os fundamentos da avaliação em saúde mental, incluindo a definição e as práticas essenciais da entrevista psicológica. Clique nos tópicos para expandir e ver os detalhes.</p>
+                <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Entrevista Psicológica em Saúde Mental</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700">A entrevista psicológica desempenha um papel crucial tanto na avaliação quanto no tratamento de questões relacionadas à saúde mental. Ela serve como uma ferramenta essencial para entender a dinâmica psicológica de um indivíduo, identificar transtornos mentais e auxiliar no processo terapêutico.</p>
+                    </div>
+                </div>
+                <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Três Regras “de Ouro” da Entrevista</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <ol class="list-decimal list-inside space-y-2 text-stone-700">
+                            <li><strong>Pacientes organizados:</strong> Devem ser entrevistados de forma mais aberta, permitindo que falem de maneira mais espontânea. O entrevistador fala pouco.</li>
+                            <li><strong>Pacientes desorganizados:</strong> Devem ser entrevistados de forma mais estruturada. O entrevistador fala mais e faz perguntas mais simples e dirigidas.</li>
+                            <li><strong>Pacientes tímidos, ansiosos ou paranoides:</strong> Deve-se começar com perguntas neutras (nome, onde mora, etc.) e, gradativamente, formular perguntas "mais quentes" ou constrangedoras.</li>
+                        </ol>
+                    </div>
+                </div>
+                 <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Instrumentos para Hipóteses Diagnósticas</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700">As hipóteses diagnósticas podem ser construídas a partir dos seguintes instrumentos/procedimentos:</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-stone-700">
+                            <li>Anamnese</li>
+                            <li>Exame do estado mental</li>
+                            <li>Exame físico geral e neurológico</li>
+                            <li>Avaliação psicológica/psicodiagnóstico e avaliação neuropsicológica</li>
+                            <li>Exames complementares</li>
+                        </ul>
+                    </div>
+                </div>
             </section>
-            <section id="klein-anna" class="content-section">
-                <!-- Content will be injected by JS -->
+            
+            <!-- Seção de Transtornos de Ansiedade -->
+            <section id="ansiedade" class="content-section space-y-4">
+                 <p class="text-center text-stone-600 bg-stone-100 p-4 rounded-lg">Esta seção explora os Transtornos de Ansiedade, caracterizados por medo e preocupação excessivos que interferem no funcionamento diário. Clique em cada transtorno abaixo para ver suas principais características.</p>
+                <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Transtorno de Ansiedade de Separação</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700">Medo ou ansiedade excessiva e inapropriada ao estágio de desenvolvimento, relacionada à separação de figuras de apego.</p>
+                    </div>
+                </div>
+                <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Mutismo Seletivo</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700">Fracasso persistente em falar em situações sociais específicas (ex: escola), nas quais existe a expectativa de falar, embora o indivíduo fale em outras situações.</p>
+                    </div>
+                </div>
+                <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Fobia Específica</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700">Medo ou ansiedade acentuada e desproporcional acerca de um objeto ou situação específica (ex: animais, altura, tempestades).</p>
+                    </div>
+                </div>
+                <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Transtorno de Ansiedade Social (Fobia Social)</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700">Medo ou ansiedade acentuada de situações sociais nas quais o indivíduo pode ser avaliado pelos outros, temendo agir de forma a ser avaliado negativamente.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Transtorno de Pânico</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700">Ataques de pânico inesperados e recorrentes, que são surtos abruptos de medo ou desconforto intenso, acompanhados de preocupação persistente sobre ter novos ataques.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Agorafobia</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700">Medo ou ansiedade acentuada sobre duas (ou mais) das seguintes situações: usar transporte público, permanecer em espaços abertos, permanecer em locais fechados, ficar em uma fila ou multidão, sair de casa sozinho.</p>
+                    </div>
+                </div>
+                <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Transtorno de Ansiedade Generalizada (TAG)</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700">Ansiedade e preocupação excessivas sobre diversos eventos ou atividades, ocorrendo na maioria dos dias por pelo menos seis meses, acompanhadas por sintomas como inquietação, fadiga e tensão muscular.</p>
+                    </div>
+                </div>
             </section>
-            <section id="winnicott" class="content-section">
-                 <!-- Content will be injected by JS -->
+            
+             <!-- Seção de Transtornos de Humor -->
+            <section id="humor" class="content-section space-y-4">
+                <p class="text-center text-stone-600 bg-stone-100 p-4 rounded-lg">Esta seção detalha os Transtornos de Humor, cuja perturbação fundamental é uma alteração do afeto para depressão ou elação (mania). Clique para explorar as características de cada um.</p>
+                <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Transtorno Bipolar I</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700">Caracterizado pela ocorrência de pelo menos um episódio maníaco. Episódios depressivos e hipomaníacos também podem ocorrer.</p>
+                    </div>
+                </div>
+                <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Transtorno Bipolar II</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700">Caracterizado por um curso clínico de pelo menos um episódio hipomaníaco e pelo menos um episódio depressivo maior, sem nunca ter tido um episódio maníaco completo.</p>
+                    </div>
+                </div>
+                <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Transtorno Ciclotímico</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700">Um distúrbio de humor crônico e flutuante, com duração de pelo menos dois anos, envolvendo numerosos períodos com sintomas hipomaníacos e períodos com sintomas depressivos que não satisfazem os critérios para um episódio completo.</p>
+                    </div>
+                </div>
+                <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Transtorno Depressivo Maior</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700">Presença de um ou mais episódios depressivos maiores (duração de pelo menos duas semanas com humor deprimido ou perda de interesse/prazer) na ausência de episódios maníacos ou hipomaníacos.</p>
+                    </div>
+                </div>
+                <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Transtorno Depressivo Persistente (Distimia)</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700">Humor deprimido que ocorre na maior parte do dia, na maioria dos dias, por pelo menos dois anos (um ano para crianças e adolescentes).</p>
+                    </div>
+                </div>
             </section>
-            <section id="lacan" class="content-section">
-                 <!-- Content will be injected by JS -->
+            
+            <!-- Seção de Transtornos Psicóticos -->
+            <section id="psicoticos" class="content-section space-y-4">
+                <p class="text-center text-stone-600 bg-stone-100 p-4 rounded-lg">Aqui são abordados os Transtornos Psicóticos, definidos por anormalidades como delírios e alucinações, que indicam uma perda de contato com a realidade. Explore os diferentes tipos e suas durações.</p>
+                 <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Características dos Transtornos Psicóticos</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <ul class="list-disc list-inside space-y-2 text-stone-700">
+                           <li><strong>Sintomas Positivos:</strong> Delírios (crenças fixas) e Alucinações (percepções sem estímulo).</li>
+                            <li><strong>Sintomas Negativos:</strong> Avolia (falta de motivação), Alogia (discurso diminuído), Anedonia (incapacidade de sentir prazer), Embotamento afetivo.</li>
+                            <li><strong>Sintomas Desorganizados:</strong> Desorganização do pensamento e da linguagem, afeto inadequado.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Diferença de Duração: Psicótico Breve vs. Esquizofreniforme</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                         <ul class="list-disc list-inside space-y-1 text-stone-700">
+                            <li><strong>Transtorno Psicótico Breve:</strong> Dura no mínimo um dia, mas menos de um mês.</li>
+                            <li><strong>Transtorno Esquizofreniforme:</strong> Dura mais de um mês, mas menos de seis meses.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Esquizofrenia</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700 font-medium mb-2">Um transtorno mental grave que muda o modo como a pessoa pensa, sente e se comporta, fazendo com que perca a noção da realidade (psicose).</p>
+                        <p class="text-stone-700 font-medium">Tipos:</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-stone-700">
+                            <li><strong>Simples:</strong> Lenta e progressiva, com sintomas pouco evidentes.</li>
+                            <li><strong>Hebefrênica:</strong> Pensamentos e falas sem sentido, comportamento infantilizado.</li>
+                            <li><strong>Paranóide:</strong> Forma mais comum, com delírios e alucinações auditivas.</li>
+                            <li><strong>Catatônica:</strong> Extrema agitação ou imobilidade.</li>
+                            <li><strong>Residual:</strong> Sinais isolados persistem após uma crise.</li>
+                            <li><strong>Indiferenciada:</strong> Sintomas variados que não se enquadram nas outras categorias.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Transtorno Esquizoafetivo vs. Transtorno de Humor</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700">A principal diferença é que no Transtorno Esquizoafetivo, há uma combinação de sintomas de esquizofrenia com um episódio de humor, sendo os sintomas psicóticos uma parte central e persistente da doença. Em um Transtorno de Humor, os sintomas psicóticos, se presentes, ocorrem durante os episódios de humor grave.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Transtorno Delirante</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700 font-medium">Tipos de delírio:</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-stone-700">
+                            <li><strong>Erotomania:</strong> Acredita que outra pessoa está apaixonada por ela.</li>
+                            <li><strong>Grandiosidade:</strong> Acredita ter um grande talento ou ter feito uma descoberta importante.</li>
+                            <li><strong>Ciúme:</strong> Acredita que o parceiro é infiel.</li>
+                            <li><strong>Perseguição:</strong> Acredita que há um plano contra ela.</li>
+                            <li><strong>Somatização:</strong> Preocupação com funções ou atributos corporais.</li>
+                        </ul>
+                    </div>
+                </div>
             </section>
-        </main>
+            
+            <!-- Seção de Transtornos Alimentares -->
+            <section id="alimentares" class="content-section space-y-4">
+                <p class="text-center text-stone-600 bg-stone-100 p-4 rounded-lg">Os Transtornos Alimentares são caracterizados por perturbações no comportamento alimentar. Clique nos transtornos abaixo para ver suas características distintas e opções de tratamento.</p>
+                <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Transtorno de Pica</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700">Ingestão persistente de substâncias não nutritivas e não alimentares (ex: papel, terra) por no mínimo um mês.</p>
+                    </div>
+                </div>
+                <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Transtorno de Ruminação</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700">Regurgitação repetida de alimento após ingerido, que pode ser remastigado ou ejetado, por no mínimo um mês.</p>
+                    </div>
+                </div>
+                <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Transtorno de Ingestão Alimentar Esquivo/Restritivo (TIAER)</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700">Restrição ou esquiva alimentar que leva a uma falha em atender às necessidades nutricionais, resultando em perda de peso significativa ou deficiência nutricional.</p>
+                    </div>
+                </div>
+                <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Bulimia Nervosa</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700">Episódios recorrentes de compulsão alimentar (ingestão de grande quantidade de comida com sensação de falta de controle) seguidos por comportamentos compensatórios inapropriados (vômitos, uso de laxantes, exercício excessivo) para impedir o ganho de peso.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Anorexia Nervosa</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700">Restrição da ingestão calórica levando a um peso corporal significativamente baixo, medo intenso de ganhar peso e uma perturbação na percepção do próprio peso ou forma corporal.</p>
+                    </div>
+                </div>
+                <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Transtorno de Compulsão Alimentar</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700">Episódios recorrentes de compulsão alimentar sem o uso de comportamentos compensatórios inapropriados.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Tratamentos para Transtornos Alimentares</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <ul class="list-disc list-inside space-y-2 text-stone-700">
+                            <li><strong>Tratamentos com Drogas:</strong> Antidepressivos, ansiolíticos e inibidores de apetite.</li>
+                            <li><strong>Tratamentos Psicológicos:</strong> Terapia Cognitivo-Comportamental (TCC), Psicoterapia Interpessoal, Terapia Familiar.</li>
+                            <li><strong>Outras Formas:</strong> Hospitalização e tratamento ambulatorial.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Seção de Transtornos Aditivos -->
+            <section id="aditivos" class="content-section space-y-4">
+                 <p class="text-center text-stone-600 bg-stone-100 p-4 rounded-lg">Esta seção cobre os Transtornos Relacionados a Substâncias e Transtornos Aditivos, incluindo conceitos chave, tipos de transtornos e o transtorno do jogo. Clique para explorar os detalhes.</p>
+                 <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Conceitos: Uso, Abuso, Dependência, Intoxicação</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <ul class="list-disc list-inside space-y-1 text-stone-700">
+                            <li><strong>Uso:</strong> Consumo casual de uma substância.</li>
+                            <li><strong>Abuso:</strong> Uso nocivo, que se torna mais recorrente e causa problemas.</li>
+                            <li><strong>Dependência:</strong> Problemas gerados pela compulsão e necessidade constante da substância.</li>
+                            <li><strong>Intoxicação:</strong> Síndrome resultante da ingestão de grandes quantidades de uma substância.</li>
+                            <li><strong>Abstinência:</strong> Sintomas que surgem ao parar ou reduzir o uso da substância.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Transtorno do Jogo</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-stone-700 font-medium mb-2">Um vício comportamental que afeta o controle sobre a atividade de jogar, levando a consequências negativas. Critérios diagnósticos incluem:</p>
+                         <ul class="list-disc list-inside mt-2 space-y-1 text-stone-700">
+                            <li>Preocupação com o jogo.</li>
+                            <li>Necessidade de jogar com quantias maiores.</li>
+                            <li>Agitação/irritabilidade ao tentar parar.</li>
+                            <li>Esforços sem sucesso para controlar.</li>
+                            <li>Mentir sobre o envolvimento.</li>
+                            <li>Colocar em risco relacionamentos ou emprego.</li>
+                        </ul>
+                    </div>
+                </div>
+                 <div class="accordion-item bg-white rounded-lg shadow-sm border border-stone-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                        <span class="text-lg font-semibold text-teal-700">Tratamentos para Transtornos Aditivos</span>
+                        <span class="icon text-2xl font-light text-teal-700">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <ul class="list-disc list-inside space-y-2 text-stone-700">
+                            <li>Desintoxicação e Monitoramento Médico</li>
+                            <li>Terapia Comportamental (ex: TCC)</li>
+                            <li>Terapia Farmacológica</li>
+                            <li>Aconselhamento e Grupos de Apoio (ex: AA)</li>
+                            <li>Tratamento Residencial ou Internação</li>
+                            <li>Programas de Redução de Danos</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
 
+        </main>
     </div>
 
     <script>
-        const studyData = {
-            freud: {
-                title: "Técnica Psicanalítica Freudiana",
-                intro: "Esta seção detalha as regras técnicas fundamentais estabelecidas por Sigmund Freud, que formam a base da prática clínica psicanalítica. Explore os conceitos que definem a postura do analista e a dinâmica da análise, como a atenção flutuante, a neutralidade e o manejo da transferência.",
-                concepts: [
-                    { title: "Técnica Analítica", description: "Um conjunto de recomendações para o analista, incluindo a Atenção Flutuante (a contrapartida da associação livre do paciente), a Neutralidade (agir como um espelho) e a Abstinência (não satisfazer as demandas do paciente), que visam criar as condições ideais para o trabalho analítico." },
-                    { title: "Transferência", description: "Fenômeno central em que sentimentos e desejos do passado do paciente são deslocados para a figura do analista. É o motor do tratamento, mas também sua maior resistência, e seu manejo adequado (sem correspondê-la nem reprimi-la) é crucial." }
-                ]
-            },
-            klein_anna: {
-                title: "Psicanálise Infantil e Teorias do Desenvolvimento",
-                intro: "Aqui, exploramos o debate central na história da psicanálise infantil entre Anna Freud e Melanie Klein. A seção contrasta suas abordagens sobre a técnica, o desenvolvimento do superego e a natureza do conflito psíquico na criança, incluindo um gráfico que visualiza a diferença fundamental em suas concepções do superego.",
-                comparison: [
-                    { topic: "Análise de Crianças", anna: "A técnica deve ser diferente da dos adultos. A relação com o terapeuta é de natureza pedagógica e reeducativa.", klein: "A análise de crianças é idêntica à de adultos. A técnica do jogo é usada para acessar as fantasias inconscientes, que devem ser interpretadas em profundidade." },
-                    { topic: "Transferência", anna: "Crianças não desenvolvem uma neurose de transferência completa, pois seus vínculos principais ainda são com os pais reais.", klein: "Crianças desenvolvem uma neurose de transferência completa e análoga à dos adultos, que deve ser analisada sistematicamente (tanto a positiva quanto a negativa)." },
-                    { topic: "Superego", anna: "O superego da criança é fraco e precisa ser reforçado pelo terapeuta.", klein: "A criança possui um superego precoce, formado no primeiro ano de vida, que é excessivamente sádico e cruel. A análise visa reduzir sua severidade." },
-                    { topic: "Conflito Psíquico", anna: "Baseado na segunda tópica de Freud, o conflito ocorre entre as instâncias (ego, id, superego) e a realidade.", klein: "O conflito central é entre os sentimentos de amor e ódio em relação aos objetos (internos e externos)." }
-                ],
-                 positions: {
-                    title: "As Posições de Klein",
-                    description: "Klein substituiu a ideia de 'fases' pelo conceito de 'posições', estruturas mentais que persistem ao longo da vida.",
-                    items: [
-                        { name: "Posição Esquizo-Paranoide", details: "Marcada pela angústia persecutória (medo de aniquilação) e pela relação com objetos parciais (bom/mau)." },
-                        { name: "Posição Depressiva", details: "Caracterizada pela angústia depressiva (culpa), a percepção do objeto total e o desejo de reparação." }
-                    ]
-                }
-            },
-            winnicott: {
-                title: "Teoria das Relações de Objeto de Winnicott",
-                intro: "Nesta seção, aprofundamos nas contribuições de D.W. Winnicott, que deu ênfase à importância crucial do ambiente e da figura materna no desenvolvimento psíquico. Conheça conceitos inovadores como 'mãe suficientemente boa', 'holding' e o 'espaço transicional'.",
-                concepts: [
-                    { title: "Ambiente e o Self", description: "Winnicott destacou a importância do ambiente real (a mãe). A 'Mãe Suficientemente Boa' é aquela que, através do holding (sustentação), permite o desenvolvimento do 'self verdadeiro'. Falhas nesse processo levam à criação de um 'self falso' como defesa." },
-                    { title: "Espaço Transicional", description: "Uma área intermediária de experiência, entre a realidade interna (fantasia) e a externa. O 'Objeto Transicional' é a primeira possessão do bebê que habita esse espaço, ajudando-o a lidar com a separação e inaugurando a capacidade de brincar e criar." }
-                ]
-            },
-            lacan: {
-                title: "Conceitos Estruturais de Jacques Lacan",
-                intro: "Explore a abordagem estruturalista de Jacques Lacan, que reformulou a teoria psicanalítica a partir da linguística. Esta seção foca no seu conceito central de 'Grande Outro' como a ordem simbólica que preexiste e determina o sujeito e seu inconsciente.",
-                concepts: [
-                    { title: "O Grande Outro (A)", description: "Não é uma pessoa, mas sim a ordem simbólica: o tesouro dos significantes, o campo da linguagem, da cultura e da Lei que preexiste ao sujeito e determina seu inconsciente. O inconsciente é 'o discurso do Outro'." }
-                ]
-            }
-        };
+        document.addEventListener('DOMContentLoaded', function() {
+            const navButtons = document.querySelectorAll('.nav-button');
+            const contentSections = document.querySelectorAll('.content-section');
+            const accordionButtons = document.querySelectorAll('.accordion-button');
 
-        function renderFreud() {
-            const data = studyData.freud;
-            const section = document.getElementById('freud');
-            let content = `<h2 class="text-3xl font-bold text-center mb-4 text-[#5C4B3E]">${data.title}</h2>`;
-            content += `<p class="text-lg text-center text-gray-600 max-w-3xl mx-auto mb-10">${data.intro}</p>`;
-            content += '<div class="grid md:grid-cols-2 gap-8">';
-            data.concepts.forEach(concept => {
-                content += `
-                    <div class="card rounded-lg p-6">
-                        <h3 class="text-2xl font-semibold mb-3 text-[#A58D76]">${concept.title}</h3>
-                        <p class="text-gray-700 leading-relaxed">${concept.description}</p>
-                    </div>
-                `;
-            });
-            content += '</div>';
-            section.innerHTML = content;
-        }
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.dataset.target;
 
-        function renderKleinAnna() {
-            const data = studyData.klein_anna;
-            const section = document.getElementById('klein-anna');
-            let content = `<h2 class="text-3xl font-bold text-center mb-4 text-[#5C4B3E]">${data.title}</h2>`;
-             content += `<p class="text-lg text-center text-gray-600 max-w-3xl mx-auto mb-12">${data.intro}</p>`;
-            
-            content += `<div class="bg-white rounded-lg p-6 md:p-8 shadow-md border border-gray-200 mb-12">
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center items-center">
-                                <div class="font-bold text-xl text-[#A58D76]">Anna Freud</div>
-                                <div class="text-lg font-semibold text-gray-500">Tópico de Comparação</div>
-                                <div class="font-bold text-xl text-[#A58D76]">Melanie Klein</div>
-                            </div>
-                            <hr class="my-4">`;
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
 
-            data.comparison.forEach(item => {
-                content += `
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center py-4 border-b last:border-b-0">
-                        <div class="text-gray-700 text-center md:text-left">${item.anna}</div>
-                        <div class="font-semibold text-gray-800 text-center order-first md:order-none">${item.topic}</div>
-                        <div class="text-gray-700 text-center md:text-left">${item.klein}</div>
-                    </div>
-                `;
-            });
-            content += `</div>`;
-
-            content += `
-                <div class="card rounded-lg p-6 md:p-8 mb-12">
-                    <h3 class="text-2xl font-semibold mb-4 text-center text-[#A58D76]">${data.positions.title}</h3>
-                    <p class="text-center text-gray-600 mb-6">${data.positions.description}</p>
-                    <div class="flex items-center justify-center space-x-4 md:space-x-8">
-                         <div class="text-center p-4 bg-gray-50 rounded-lg flex-1">
-                            <h4 class="font-bold text-lg">${data.positions.items[0].name}</h4>
-                            <p class="text-sm text-gray-600">${data.positions.items[0].details}</p>
-                         </div>
-                         <div class="text-3xl text-[#A58D76] font-light">→</div>
-                         <div class="text-center p-4 bg-gray-50 rounded-lg flex-1">
-                            <h4 class="font-bold text-lg">${data.positions.items[1].name}</h4>
-                            <p class="text-sm text-gray-600">${data.positions.items[1].details}</p>
-                         </div>
-                    </div>
-                </div>`;
-            
-            content += `<div class="card rounded-lg p-6 md:p-8">
-                <h3 class="text-2xl font-semibold mb-4 text-center text-[#A58D76]">Visualização do Superego: Anna Freud vs. Melanie Klein</h3>
-                <div class="chart-container">
-                    <canvas id="superegoChart"></canvas>
-                </div>
-            </div>`;
-            section.innerHTML = content;
-        }
-        
-        function renderWinnicott() {
-            const data = studyData.winnicott;
-            const section = document.getElementById('winnicott');
-            let content = `<h2 class="text-3xl font-bold text-center mb-4 text-[#5C4B3E]">${data.title}</h2>`;
-            content += `<p class="text-lg text-center text-gray-600 max-w-3xl mx-auto mb-10">${data.intro}</p>`;
-            content += '<div class="grid md:grid-cols-2 gap-8">';
-            data.concepts.forEach(concept => {
-                content += `
-                    <div class="card rounded-lg p-6">
-                        <h3 class="text-2xl font-semibold mb-3 text-[#A58D76]">${concept.title}</h3>
-                        <p class="text-gray-700 leading-relaxed">${concept.description}</p>
-                    </div>
-                `;
-            });
-            content += '</div>';
-            section.innerHTML = content;
-        }
-
-        function renderLacan() {
-            const data = studyData.lacan;
-            const section = document.getElementById('lacan');
-            let content = `<h2 class="text-3xl font-bold text-center mb-4 text-[#5C4B3E]">${data.title}</h2>`;
-            content += `<p class="text-lg text-center text-gray-600 max-w-3xl mx-auto mb-10">${data.intro}</p>`;
-            content += '<div class="max-w-2xl mx-auto">';
-            data.concepts.forEach(concept => {
-                content += `
-                    <div class="card rounded-lg p-6">
-                        <h3 class="text-2xl font-semibold mb-3 text-[#A58D76]">${concept.title}</h3>
-                        <p class="text-gray-700 leading-relaxed">${concept.description}</p>
-                    </div>
-                `;
-            });
-            content += '</div>';
-            section.innerHTML = content;
-        }
-
-
-        let superegoChartInstance = null;
-        function createSuperegoChart() {
-            const ctx = document.getElementById('superegoChart').getContext('2d');
-            if(superegoChartInstance) {
-                superegoChartInstance.destroy();
-            }
-            superegoChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Anna Freud', 'Melanie Klein'],
-                    datasets: [{
-                        label: 'Severidade Conceitual do Superego',
-                        data: [2, 8],
-                        backgroundColor: [
-                            'rgba(165, 141, 118, 0.6)',
-                            'rgba(92, 75, 62, 0.6)'
-                        ],
-                        borderColor: [
-                            'rgba(165, 141, 118, 1)',
-                            'rgba(92, 75, 62, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 10,
-                             ticks: {
-                                callback: function(value) {
-                                    if (value === 2) return 'Fraco';
-                                    if (value === 8) return 'Sádico/Severo';
-                                    return '';
-                                }
-                            }
+                    contentSections.forEach(section => {
+                        if (section.id === targetId) {
+                            section.classList.add('active');
+                        } else {
+                            section.classList.remove('active');
                         }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                             callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed.y === 2) {
-                                        label += 'Fraco e a ser reforçado';
-                                    } else {
-                                        label += 'Precoce e sádico';
-                                    }
-                                    return label;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        const navButtons = document.querySelectorAll('.nav-button');
-        const contentSections = document.querySelectorAll('.content-section');
-
-        navButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const target = button.dataset.target;
-
-                navButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-
-                contentSections.forEach(section => {
-                    if (section.id === target) {
-                        section.classList.add('active');
-                    } else {
-                        section.classList.remove('active');
-                    }
+                    });
                 });
-                
-                if (target === 'klein-anna') {
-                    setTimeout(createSuperegoChart, 0);
-                }
             });
-        });
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            renderFreud();
-            renderKleinAnna();
-            renderWinnicott();
-            renderLacan();
+
+            accordionButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    button.classList.toggle('open');
+                });
+            });
         });
     </script>
+
 </body>
 </html>
